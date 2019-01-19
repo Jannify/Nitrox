@@ -1,5 +1,7 @@
-﻿using NitroxModel.DataStructures.GameLogic;
+﻿using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic;
 using NitroxServer.UnityStubs;
+using NitroxModel.Logger;
 
 namespace NitroxServer.GameLogic.Entities.Spawning
 {
@@ -8,11 +10,13 @@ namespace NitroxServer.GameLogic.Entities.Spawning
         public AbsoluteEntityCell AbsoluteEntityCell { get; private set; }
         public UnityEngine.Vector3 Position { get; private set; }
         public UnityEngine.Quaternion Rotation { get; private set; }
+        public UnityEngine.Vector3 Scale { get; private set; }
         public string ClassId { get; private set; }
         public string Guid { get; private set; }
         public BiomeType BiomeType { get; private set; }
         public float Density { get; private set; }
         public bool CanSpawnCreature { get; private set; }
+        public List<EntitySlot.Type> AllowedTypes { get; private set; }
 
         public static EntitySpawnPoint From(Int3 batchId, GameObject go, CellManager.CellHeader cellHeader)
         {
@@ -31,16 +35,18 @@ namespace NitroxServer.GameLogic.Entities.Spawning
                 esp.BiomeType = entitySlot.biomeType;
                 esp.Density = entitySlot.density;
                 esp.CanSpawnCreature = entitySlot.IsCreatureSlot();
+                esp.AllowedTypes = entitySlot.allowedTypes;
             }
 
             esp.Rotation = go.GetComponent<Transform>().Rotation;
 
             UnityEngine.Vector3 localPosition = go.GetComponent<Transform>().Position;
             esp.Position = esp.AbsoluteEntityCell.Center + localPosition;
+            esp.Scale = go.GetComponent<Transform>().Scale;
 
             return esp;
         }
 
-        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, ClassId: {ClassId}, Guid: {Guid}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";
+        public override string ToString() => $"[EntitySpawnPoint - {AbsoluteEntityCell}, Position: {Position}, Rotation: {Rotation}, Scale: {Scale}, ClassId: {ClassId}, Guid: {Guid}, BiomeType: {BiomeType}, Density: {Density}, CanSpawnCreature: {CanSpawnCreature}]";
     }
 }

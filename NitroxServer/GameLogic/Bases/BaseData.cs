@@ -2,6 +2,7 @@
 using NitroxModel.DataStructures.Util;
 using ProtoBufNet;
 using System.Collections.Generic;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxServer.GameLogic.Bases
 {
@@ -57,11 +58,16 @@ namespace NitroxServer.GameLogic.Bases
                 if (basePiecesByGuid.TryGetValue(guid, out basePiece))
                 {
                     basePiece.ConstructionAmount = constructionAmount;
+
+                    if(basePiece.ConstructionCompleted)
+                    {
+                        basePiece.ConstructionCompleted = false;
+                    }
                 }
             }
         }
 
-        public void BasePieceConstructionCompleted(string guid, Optional<string> newlyCreatedParentGuid)
+        public void BasePieceConstructionCompleted(string guid, string baseGuid)
         {
             BasePiece basePiece;
 
@@ -71,14 +77,10 @@ namespace NitroxServer.GameLogic.Bases
                 {
                     basePiece.ConstructionAmount = 1.0f;
                     basePiece.ConstructionCompleted = true;
-                    basePiece.NewBaseGuid = newlyCreatedParentGuid;
+                    basePiece.BaseGuid = baseGuid;
+                    basePiece.ParentGuid = Optional<string>.OfNullable(baseGuid);
 
-                    if (newlyCreatedParentGuid.IsPresent())
-                    {
-                        basePiece.ParentGuid = Optional<string>.Empty();
-                    }
-
-                    lock(completedBasePieceHistory)
+                    lock (completedBasePieceHistory)
                     {
                         completedBasePieceHistory.Add(basePiece);
                     }
@@ -113,6 +115,18 @@ namespace NitroxServer.GameLogic.Bases
                     }
 
                     basePiecesByGuid.Remove(guid);
+                }
+            }
+        }
+
+        public void UpdateBasePieceMetadata(string guid, BasePieceMetadata metadata)
+        {
+            BasePiece basePiece;
+            lock (basePiecesByGuid)
+            {
+                if (basePiecesByGuid.TryGetValue(guid, out basePiece))
+                {
+                    basePiece.Metadata = Optional<BasePieceMetadata>.OfNullable(metadata);
                 }
             }
         }

@@ -4,11 +4,12 @@ using System.Reflection;
 using NitroxModel.Logger;
 using ProtoBufNet;
 using ProtoBufNet.Meta;
-using NitroxModel.DataStructures.GameLogic.Buildings;
+using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxServer.Serialization
 {
-    class ServerProtobufSerializer
+    public class ServerProtobufSerializer
     {
         private readonly RuntimeTypeModel model;
 
@@ -52,6 +53,9 @@ namespace NitroxServer.Serialization
             MetaType metaType = model.Add(typeof(RotationMetadata), false);
             metaType.AddSubType(50, typeof(CorridorRotationMetadata));
             metaType.AddSubType(60, typeof(MapRoomRotationMetadata));
+
+            MetaType metadataType = model.Add(typeof(BasePieceMetadata), false);
+            metadataType.AddSubType(50, typeof(SignMetadata));
         }
         
         private void RegisterAssemblyClasses(string assemblyName)
@@ -80,11 +84,15 @@ namespace NitroxServer.Serialization
 
                         try
                         {
+
                             model[type].Add(tag, property.Name);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name);
+                            if(typeof(Peeper) != type) // srsly peeper we know you are broken...
+                            {
+                                Log.Warn("Couldn't load serializable attribute for " + type + " " + property.Name + " " + ex);
+                            }
                         }
                     }
                 }

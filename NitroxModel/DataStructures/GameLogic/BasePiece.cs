@@ -1,8 +1,9 @@
-﻿using NitroxModel.DataStructures.GameLogic.Buildings;
+﻿using NitroxModel.DataStructures.GameLogic.Buildings.Rotation;
 using NitroxModel.DataStructures.Util;
 using ProtoBuf;
 using System;
 using UnityEngine;
+using NitroxModel.DataStructures.GameLogic.Buildings.Metadata;
 
 namespace NitroxModel.DataStructures.GameLogic
 {
@@ -47,14 +48,7 @@ namespace NitroxModel.DataStructures.GameLogic
         public bool IsFurniture { get; set; }
 
         [ProtoMember(11)]
-        public string SerializableNewBaseGuid
-        {
-            get { return (NewBaseGuid.IsPresent()) ? NewBaseGuid.Get() : null; }
-            set { NewBaseGuid = Optional<string>.OfNullable(value); }
-        }
-
-        [ProtoIgnore]
-        public Optional<string> NewBaseGuid { get; set; }
+        public string BaseGuid { get; set; }
 
         [ProtoMember(12, DynamicType = true)]
         public RotationMetadata SerializableRotationMetadata
@@ -65,12 +59,22 @@ namespace NitroxModel.DataStructures.GameLogic
 
         [ProtoIgnore]
         public Optional<RotationMetadata> RotationMetadata {get; set; }
+        
+        [ProtoMember(13, DynamicType = true)]
+        public BasePieceMetadata SerializableMetadata
+        {
+            get { return (Metadata.IsPresent()) ? Metadata.Get() : null; }
+            set { Metadata = Optional<BasePieceMetadata>.OfNullable(value); }
+        }
 
+        [ProtoIgnore]
+        public Optional<BasePieceMetadata> Metadata { get; set; }
+                
         public BasePiece()
         {
-            NewBaseGuid = Optional<String>.Empty();
-            ParentGuid = Optional<String>.Empty();
+            ParentGuid = Optional<string>.Empty();
             RotationMetadata = Optional<RotationMetadata>.Empty();
+            Metadata = Optional<BasePieceMetadata>.Empty();
         }
 
         public BasePiece(string guid, Vector3 itemPosition, Quaternion rotation, Vector3 cameraPosition, Quaternion cameraRotation, TechType techType, Optional<string> parentGuid, bool isFurniture, Optional<RotationMetadata> rotationMetadata)
@@ -85,13 +89,13 @@ namespace NitroxModel.DataStructures.GameLogic
             IsFurniture = isFurniture;
             ConstructionAmount = 0.0f;
             ConstructionCompleted = false;
-            NewBaseGuid = Optional<string>.Empty();
             RotationMetadata = rotationMetadata;
+            Metadata = Optional<BasePieceMetadata>.Empty();
         }
 
         public override string ToString()
         {
-            return "[BasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentGuid: " + ParentGuid + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " NewBaseGuid: " + NewBaseGuid + " RotationMetadata: " + RotationMetadata + "]";
+            return "[BasePiece - ItemPosition: " + ItemPosition + " Guid: " + Guid + " Rotation: " + Rotation + " CameraPosition: " + CameraPosition + "CameraRotation: " + CameraRotation + " TechType: " + TechType + " ParentGuid: " + ParentGuid + " ConstructionAmount: " + ConstructionAmount + " IsFurniture: " + IsFurniture + " BaseGuid: " + BaseGuid + " RotationMetadata: " + RotationMetadata + "]";
         }
     }
 }

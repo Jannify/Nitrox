@@ -16,7 +16,7 @@ namespace NitroxPatcher.Patches
 
         public static readonly OpCode INJECTION_OPCODE = OpCodes.Callvirt;
         public static readonly object INJECTION_OPERAND = typeof(Constructable).GetMethod("SetState", BindingFlags.Public | BindingFlags.Instance);
-
+        
         public static IEnumerable<CodeInstruction> Transpiler(MethodBase original, IEnumerable<CodeInstruction> instructions)
         {
             Validate.NotNull(INJECTION_OPERAND);
@@ -31,8 +31,8 @@ namespace NitroxPatcher.Patches
                      */
                     yield return TranspilerHelper.LocateService<Building>();
                     yield return original.Ldloc<Constructable>();
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
-                    yield return new ValidatedCodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Component).GetMethod("get_gameObject", BindingFlags.Instance | BindingFlags.Public));
+                    yield return new CodeInstruction(OpCodes.Callvirt, typeof(Building).GetMethod("DeconstructionBegin", BindingFlags.Public | BindingFlags.Instance));
                 }
             }
         }
