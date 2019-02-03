@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
+using NitroxClient.Communication;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.Helper;
 using NitroxClient.MonoBehaviours;
@@ -10,8 +12,6 @@ using NitroxModel.Helper;
 using NitroxModel.Logger;
 using NitroxModel.Packets;
 using UnityEngine;
-using NitroxClient.Communication;
-using System.Collections;
 
 namespace NitroxClient.GameLogic
 {
@@ -125,7 +125,7 @@ namespace NitroxClient.GameLogic
             GuidHelper.SetNewGuid(gameObject, guid);
 
             // Updates names and colours with persisted data .....yeah.....
-            if (techType != TechType.Cyclops)
+            if (techType == TechType.Seamoth || techType == TechType.Exosuit)
             { // Seamoth & Prawn suit
                 Vehicle vehicle = gameObject.GetComponent<Vehicle>();
                 if (dockingBayGuid.IsPresent())
@@ -153,7 +153,7 @@ namespace NitroxClient.GameLogic
                     vehicle.subName.DeserializeColors(vehicle.vehicleColors);
                 }
             }
-            else // Cyclops
+            else if(techType == TechType.Cyclops) // Cyclops
             {
                 GameObject target = GuidHelper.RequireObjectFrom(guid);
                 SubNameInput subNameInput = target.RequireComponentInChildren<SubNameInput>();
@@ -230,6 +230,14 @@ namespace NitroxClient.GameLogic
                 GameObject T = Object.Get();
                 VehicleChildObjectIdentifierHelper.SetInteractiveChildrenGuids(T, interactiveChildrenGuids);
             }
+        }
+
+        public void BroadcastCreatedVehicle(VehicleModel vehicle)
+        {
+            LocalPlayer localPlayer = NitroxServiceLocator.LocateService<LocalPlayer>();
+
+            VehicleCreated vehicleCreated = new VehicleCreated(vehicle, localPlayer.PlayerName);
+            packetSender.Send(vehicleCreated);
         }
 
         public void BroadcastDestroyedVehicle(Vehicle vehicle)

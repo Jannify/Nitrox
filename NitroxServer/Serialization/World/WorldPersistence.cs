@@ -131,7 +131,7 @@ namespace NitroxServer.Serialization.World
             world.TimeKeeper.ServerStartTime = serverStartTime;
 
             world.SimulationOwnershipData = new SimulationOwnershipData();
-            world.PlayerManager = new PlayerManager(playerData);
+            world.PlayerManager = new PlayerManager(playerData, config);
             world.EntityData = entityData;
             world.EventTriggerer = new EventTriggerer(world.PlayerManager);
             world.BaseData = baseData;
@@ -149,7 +149,8 @@ namespace NitroxServer.Serialization.World
 
             Log.Info("World GameMode " + gameMode);
 
-            Log.Info("Server Admin Password : " + config.ServerAdminPassword + " You can set your own password in the server config file or by using the /changepassword command");
+            Log.Info("Server Password: " + (string.IsNullOrEmpty(config.ServerPassword) ? "None. Public Server." : config.ServerPassword));
+            Log.Info("Admin Password: " + config.AdminPassword + ". You can edit the server config file or run /changeadminpassword NEW_PASSWORD to change it");
 
             return world;
         }
