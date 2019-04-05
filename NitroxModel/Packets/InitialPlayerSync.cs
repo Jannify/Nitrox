@@ -15,9 +15,11 @@ namespace NitroxModel.Packets
         public List<BasePiece> BasePieces { get; }
         public List<VehicleModel> Vehicles { get; }
         public List<ItemData> InventoryItems { get; }
+        public List<ItemData> StorageSlots { get; }
         public string PlayerGuid { get; }
         public bool FirstTimeConnecting { get; }
         public InitialPdaData PDAData { get; }
+        public InitialStoryGoalData StoryGoalData { get; }
         public Vector3 PlayerSpawnData { get; }
         public Optional<string> PlayerSubRootGuid { get; }
         public PlayerStatsData PlayerStatsData { get; }
@@ -26,7 +28,7 @@ namespace NitroxModel.Packets
         public string GameMode { get; }
         public Perms Permissions { get; }
 
-        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, InitialPdaData pdaData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
+        public InitialPlayerSync(string playerGuid, bool firstTimeConnecting, List<EscapePodModel> escapePodsData, string assignedEscapePodGuid, List<EquippedItemData> equipment, List<BasePiece> basePieces, List<VehicleModel> vehicles, List<ItemData> inventoryItems, List<ItemData> storageSlots, InitialPdaData pdaData, InitialStoryGoalData storyGoalData, Vector3 playerSpawnData, Optional<string> playerSubRootGuid, PlayerStatsData playerStatsData, List<InitialRemotePlayerData> remotePlayerData, List<Entity> globalRootEntities, string gameMode, Perms perms)
         {
             EscapePodsData = escapePodsData;
             AssignedEscapePodGuid = assignedEscapePodGuid;
@@ -36,7 +38,9 @@ namespace NitroxModel.Packets
             BasePieces = basePieces;
             Vehicles = vehicles;
             InventoryItems = inventoryItems;
+            StorageSlots = storageSlots;
             PDAData = pdaData;
+            StoryGoalData = storyGoalData;
             PlayerSpawnData = playerSpawnData;
             PlayerSubRootGuid = playerSubRootGuid;
             PlayerStatsData = playerStatsData;
@@ -48,7 +52,7 @@ namespace NitroxModel.Packets
 
         public override string ToString()
         {
-            return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + " PDAData: " + PDAData + "]";
+            return "[InitialPlayerSync - EquippedItems: " + EquippedItems + " BasePieces: " + BasePieces + " Vehicles: " + Vehicles + " InventoryItems: " + InventoryItems + " PDAData: " + PDAData + " StoryGoalData: " + StoryGoalData + "]";
         }
     }
 }
