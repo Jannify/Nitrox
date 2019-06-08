@@ -1,11 +1,10 @@
 ﻿using NitroxClient.GameLogic;
-using NitroxClient.GameLogic.Helper;
 using NitroxModel.Core;
+using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
 using NitroxModel.DataStructures.Util;
 using NitroxModel.Helper;
 using NitroxModel_Subnautica.Helper;
-using NitroxModel.Logger;
 using UnityEngine;
 
 namespace NitroxClient.MonoBehaviours
@@ -44,12 +43,13 @@ namespace NitroxClient.MonoBehaviours
                 SubRoot subRoot = Player.main.GetCurrentSub();
                 // If in a subroot the position will be relative to the subroot
                 if (subRoot != null && !subRoot.isBase)
-                { 
+                {
                     // Rotate relative player position relative to the subroot (else there are problems with respawning)
-                    Quaternion vehicleAngle = subRoot.transform.rotation;                    
+                    Quaternion undoVehicleAngle = subRoot.transform.rotation.GetInverse();
                     currentPosition = currentPosition - subRoot.transform.position;
-                    currentPosition = vehicleAngle.GetInverse() * currentPosition;
-
+                    currentPosition = undoVehicleAngle * currentPosition;
+                    bodyRotation = undoVehicleAngle * bodyRotation;
+                    aimingRotation = undoVehicleAngle * aimingRotation;
                 }
 
                 localPlayer.UpdateLocation(currentPosition, playerVelocity, bodyRotation, aimingRotation, vehicle);
@@ -61,7 +61,7 @@ namespace NitroxClient.MonoBehaviours
             Vehicle vehicle = Player.main.GetVehicle();
             SubRoot sub = Player.main.GetCurrentSub();
 
-            string guid;
+            NitroxId id;
             Vector3 position;
             Quaternion rotation;
             Vector3 velocity;
@@ -74,7 +74,7 @@ namespace NitroxClient.MonoBehaviours
 
             if (vehicle != null)
             {
-                guid = GuidHelper.GetGuid(vehicle.gameObject);
+                id = NitroxIdentifier.GetId(vehicle.gameObject);
                 position = vehicle.gameObject.transform.position;
                 rotation = vehicle.gameObject.transform.rotation;
                 techType = CraftData.GetTechType(vehicle.gameObject);
@@ -119,7 +119,7 @@ namespace NitroxClient.MonoBehaviours
             }
             else if (sub != null && Player.main.isPiloting)
             {
-                guid = GuidHelper.GetGuid(sub.gameObject);
+                id = NitroxIdentifier.GetId(sub.gameObject);
                 position = sub.gameObject.transform.position;
                 rotation = sub.gameObject.transform.rotation;
                 Rigidbody rigidbody = sub.GetComponent<Rigidbody>();
@@ -137,16 +137,16 @@ namespace NitroxClient.MonoBehaviours
                 return Optional<VehicleMovementData>.Empty();
             }
 
-            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(  techType, 
-                                                                                        guid, 
-                                                                                        position, 
-                                                                                        rotation, 
-                                                                                        velocity, 
-                                                                                        angularVelocity, 
-                                                                                        steeringWheelYaw, 
-                                                                                        steeringWheelPitch, 
-                                                                                        appliedThrottle, 
-                                                                                        leftArmPosition, 
+            VehicleMovementData model = VehicleMovementFactory.GetVehicleMovementData(techType,
+                                                                                        id,
+                                                                                        position,
+                                                                                        rotation,
+                                                                                        velocity,
+                                                                                        angularVelocity,
+                                                                                        steeringWheelYaw,
+                                                                                        steeringWheelPitch,
+                                                                                        appliedThrottle,
+                                                                                        leftArmPosition,
                                                                                         rightArmPosition);
             return Optional<VehicleMovementData>.Of(model);
         }

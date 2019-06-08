@@ -76,20 +76,28 @@ namespace NitroxLauncher
             Log.Error(e.ExceptionObject.ToString());
         }
 
-        private bool CanClose()
+        internal bool CanClose()
         {
             if (logic.HasSomethingRunning && !serverConsolePage.ServerRunning)
             {
                 MessageBox.Show("Cannot close as long as server or game is running", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
-            } else if(serverConsolePage.ServerRunning)
-            {
-                // If the server is running from launcher, we will just stop the server
+            }
+            // If the server is running from launcher, we will just stop the server
+            CloseInternalServerAndRemovePatch();
+            
+            
+            return true;
+        }
+
+        internal void CloseInternalServerAndRemovePatch()
+        {
+            if (serverConsolePage.ServerRunning)
+            {                
                 serverConsolePage.HandleInputData("stop\n");
             }
             // If launcher is closing, remove patch from subnautica
             logic.OnSubnauticaExited(this, new EventArgs());
-            return true;
         }
 
         private void Close_Click(object sender, RoutedEventArgs e)
@@ -141,23 +149,28 @@ namespace NitroxLauncher
         
         private void SetActive(Button activeButton)
         {
-            foreach (var item in SideBarPanel.Children)
+            foreach (var children in SideBarPanel.Children)
             {
-                if(item is Button button)
+                if (children is Grid grid)
                 {
-                    
-                    if (button.Content is TextBlock block)
+                    foreach (var item in grid.Children)
                     {
-                        if (button == activeButton)
+                        if (item is Button button)
                         {
-                            block.FontWeight = FontWeights.Bold;
-                            block.Foreground = Brushes.White;
-                        }
-                        else // set as not active
-                        {
-                            block.FontWeight = FontWeights.Normal;
-                            var bc = new BrushConverter();
-                            block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
+                            if (button.Content is TextBlock block)
+                            {
+                                if (button == activeButton)
+                                {
+                                    block.FontWeight = FontWeights.Bold;
+                                    block.Foreground = Brushes.White;
+                                }
+                                else // set as not active
+                                {
+                                    block.FontWeight = FontWeights.Normal;
+                                    var bc = new BrushConverter();
+                                    block.Foreground = (Brush)bc.ConvertFrom("#B2FFFFFF");
+                                }
+                            }
                         }
                     }
                 }
