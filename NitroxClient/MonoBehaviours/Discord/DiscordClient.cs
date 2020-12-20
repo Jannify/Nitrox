@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using NitroxClient.Helpers.DiscordGameSDK;
 using NitroxClient.MonoBehaviours.Gui.MainMenu;
 using NitroxModel.Discovery.InstallationFinders;
@@ -14,12 +13,12 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
     {
         private const long CLIENT_ID = 405122994348752896;
 
-        private Helpers.DiscordGameSDK.Discord discord;
+        public Helpers.DiscordGameSDK.Discord Discord { get; private set; }
         private ActivityManager activityManager;
         private NetworkManager networkManager;
         private Activity activity;
         private bool showingWindow;
-        private bool activatedP2P;
+        private bool isP2PActive;
 
         private static DiscordClient main;
         public static DiscordClient Main
@@ -37,13 +36,13 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         private void OnEnable()
         {
             DontDestroyOnLoad(gameObject);
-            discord = new Helpers.DiscordGameSDK.Discord(CLIENT_ID, 0);
-            activityManager = discord.GetActivityManager();
-            networkManager = discord.GetNetworkManager();
+            Discord = new Helpers.DiscordGameSDK.Discord(CLIENT_ID, 0);
+            activityManager = Discord.GetActivityManager();
+            networkManager = Discord.GetNetworkManager();
             activityManager.RegisterSteam(SteamGameRegistryFinder.SUBNAUTICA_APP_ID);
             activityManager.OnActivityJoinRequest += ActivityJoinRequest;
             activityManager.OnActivityJoin += ActivityJoin;
-            discord.SetLogHook(Helpers.DiscordGameSDK.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, "[Discord] " + message));
+            Discord.SetLogHook(Helpers.DiscordGameSDK.LogLevel.Debug, (level, message) => Log.Write((NitroxModel.Logger.LogLevel)level, "[Discord] " + message));
 
             activity = new Activity();
         }
@@ -52,13 +51,13 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             Log.Info("[Discord] Shutdown");
             main = null;
-            discord.Dispose();
+            Discord.Dispose();
         }
 
         private void Update()
         {
-            discord.RunCallbacks();
-            if (activatedP2P)
+            Discord.RunCallbacks();
+            if (isP2PActive)
             {
                 networkManager.Flush();
             }
@@ -136,18 +135,17 @@ namespace NitroxClient.MonoBehaviours.DiscordRP
         {
             Log.Info($"[Discord] Responded with {reply} to JoinRequest: {userID}");
             showingWindow = false;
-            activityManager.SendRequestReply(userID, reply, result => { });
+            activityManager.SendRequestReply(userID, reply, _ => { });
         }
 
-        public Helpers.DiscordGameSDK.Discord EnableP2P()
+        public void EnableP2P()
         {
-            activatedP2P = true;
-            return discord;
+            isP2PActive = true;
         }
 
         public void DisableP2P()
         {
-            activatedP2P = false;
+            isP2PActive = false;
         }
 
         private static string CheckIP(string ipPort)
