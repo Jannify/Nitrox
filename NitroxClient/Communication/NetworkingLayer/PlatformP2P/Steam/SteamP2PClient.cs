@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NitroxClient.Communication.Abstract;
+using NitroxClient.Communication.NetworkingLayer.PlatformP2P.Abstract;
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
-using NitroxServer.Communication.NetworkingLayer.PlatformP2P.Abstract;
 using Steamworks;
 
 namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Steam
@@ -50,7 +50,7 @@ namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Steam
                 throw new NotSupportedException("Tried passing incorrect connectionInfo to clientConnection");
             }
 
-            
+
         }
 
         public void Stop()

@@ -170,7 +170,7 @@ namespace NitroxClient.MonoBehaviours
             PlayerManager remotePlayerManager = NitroxServiceLocator.LocateService<PlayerManager>();
 
             LoadingScreenVersionText.DisableWarningText();
-            DiscordRPController.Main.InitializeInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections, $"{Main.multiplayerSession.ConnectionInfo}");
+            DiscordClient.Main.InitializeRPInGame(Main.multiplayerSession.AuthenticationContext.Username, remotePlayerManager.GetTotalPlayerCount(), Main.multiplayerSession.SessionPolicy.MaxConnections, Main.multiplayerSession.ConnectionInfo.ToString());
             NitroxServiceLocator.LocateService<PlayerChatManager>().LoadChatKeyHint();
         }
 

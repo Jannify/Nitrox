@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -115,7 +115,16 @@
     <Compile Include="GameLogic\Spawning\Metadata\StarshipDoorMetadataProcessor.cs" />
     <Compile Include="GameLogic\Spawning\Metadata\WeldableWallPanelGenericMetadataProcessor.cs" />
     <Compile Include="GameLogic\StorageSlots.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\ActivityManager.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\Constants.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\Core.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\ImageManager.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\LobbyManager.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\StorageManager.cs" />
+    <Compile Include="Helpers\DiscordGameSDK\StoreManager.cs" />
     <Compile Include="Helpers\NitroxProtobufSerializer.cs" />
+    <Compile Include="MonoBehaviours\Discord\DiscordClient.cs" />
+    <Compile Include="MonoBehaviours\Discord\DiscordJoinRequestGui.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChat.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatLogItem.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatPinButton.cs" />
@@ -221,8 +230,6 @@
     <Compile Include="Debuggers\BaseDebugger.cs" />
     <Compile Include="Debuggers\NetworkDebugger.cs" />
     <Compile Include="Debuggers\SceneDebugger.cs" />
-    <Compile Include="MonoBehaviours\DiscordRP\DiscordRPController.cs" />
-    <Compile Include="MonoBehaviours\DiscordRP\DiscordRpc.cs" />
     <Compile Include="GameLogic\AI.cs" />
     <Compile Include="GameLogic\Bases\Metadata\NoOpBasePieceMetadataProcessor.cs" />
     <Compile Include="GameLogic\Bases\Metadata\BasePieceMetadataProcessor.cs" />
@@ -310,7 +317,6 @@
     <Compile Include="Map\VisibleCells.cs" />
     <Compile Include="MonoBehaviours\AnimationController.cs" />
     <Compile Include="MonoBehaviours\AnimationSender.cs" />
-    <Compile Include="MonoBehaviours\DiscordRP\DiscordJoinRequestGui.cs" />
     <Compile Include="MonoBehaviours\EntityPositionBroadcaster.cs" />
     <Compile Include="MonoBehaviours\Gui\Chat\PlayerChatInputField.cs" />
     <Compile Include="MonoBehaviours\Gui\HUD\RemotePlayerVitals.cs" />

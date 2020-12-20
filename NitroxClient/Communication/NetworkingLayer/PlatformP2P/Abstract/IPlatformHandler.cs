@@ -2,7 +2,7 @@
 using NitroxClient.GameLogic;
 using NitroxModel.Packets;
 
-namespace NitroxServer.Communication.NetworkingLayer.PlatformP2P.Abstract
+namespace NitroxClient.Communication.NetworkingLayer.PlatformP2P.Abstract
 {
     public interface IPlatformHandler
     {
