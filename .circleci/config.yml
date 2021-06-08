@@ -1,0 +1,84 @@
+version: 2.1
+
+orbs:
+  windows: circleci/windows@2.4.0
+
+jobs:
+  downloadSN:
+    description: Downloads SN
+    docker:
+      - image: jannify/subnautica_nitrox:6416485996936522597
+        auth:
+          username: $DOCKERHUB_LOGIN
+          password: $DOCKERHUB_PASSWORD
+    steps:
+      - save_cache:
+          paths:
+            - /home/Subnautica/
+          key: sn-depot-cache-6416485996936522597-v1
+
+  build_and_test:
+    description: Setup, build and test solution
+    executor:
+      name: windows/default
+      shell: powershell.exe
+    steps:
+      - checkout:
+          path: C:\Users\circleci\project
+      - restore_cache:
+          keys:
+            - sn-depot-cache-6416485996936522597-v1
+            - sn-depot-cache-6416485996936522597
+      - run:
+          name: Moving Subnautica installation
+          command: | 
+            xcopy "C:\home\Subnautica\." "C:\Program Files (x86)\Steam\steamapps\common\Subnautica" /e /b /i /y
+      - run:
+          name: Update Submodules
+          command: | 
+            git submodule update --init --recursive
+      - restore_cache:
+          keys:
+            - nuget-cache-v1
+            - nuget-cache
+      - run:
+          name: Restore NuGet
+          command: | 
+            nuget restore Nitrox.sln
+      - save_cache:
+          paths:
+            - ~\.nuget\packages
+          key: nuget-cache-v1
+      - run:
+          name: Build Debug
+          command: | 
+            MSBuild.exe Nitrox.sln /property:Configuration=Debug
+      - run:
+          name: Build Release
+          command: | 
+            MSBuild.exe Nitrox.sln /property:Configuration=Release
+      - run:
+          name: Compress Artifact
+          command: Compress-Archive -Path .\NitroxLauncher\bin\Debug\ -DestinationPath Nitrox.zip
+      - store_artifacts:
+          path: Nitrox.zip
+      - run:
+          name: Running Tests
+          command: |
+            dotnet vstest NitroxTest\bin\Debug\NitroxTest.dll /logger:junit
+      - store_test_results:
+          path: .\TestResults
+workflows:
+  NitroxPR:
+    jobs:
+      - build_and_test
+  NitroxDownloadSubnautica:
+    triggers:
+      - schedule:
+          cron: "0 1 1 * *"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - downloadSN

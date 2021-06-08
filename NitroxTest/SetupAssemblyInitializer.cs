@@ -14,7 +14,7 @@ namespace NitroxTest
             NitroxEnvironment.Set(NitroxEnvironment.Types.TESTING);
             Log.Setup();
 
-            if (Directory.GetCurrentDirectory().Contains(@"D:\a\Nitrox\Nitrox")) //Check if environment is github actions
+            if (Directory.GetCurrentDirectory().Contains(@"C:\Users\circleci\project\Nitrox")) //Check if environment is circleci
             {
                 File.WriteAllText("path.txt", @"C:\PROGRA~2\Steam\steamapps\common\Subnautica");
             }
