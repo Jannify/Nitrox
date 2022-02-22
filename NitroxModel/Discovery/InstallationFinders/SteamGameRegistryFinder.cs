@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxModel.Discovery.InstallationFinders
 {

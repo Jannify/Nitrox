@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using NitroxModel.Platforms.OS.Windows.Internal;
+using NitroxModel.Platforms.OS.Shared;
 
 namespace NitroxModel.Helper
 {
