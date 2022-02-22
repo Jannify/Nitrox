@@ -1,0 +1,56 @@
+name: Building Pull Request
+on: 
+  pull_request:
+    paths-ignore:
+      - '**/PirateDetection.cs'
+
+jobs:
+  setup:
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Checking out repository
+      uses: actions/checkout@v2
+
+    - name: Create text files with Subnautica Paths
+      run: |
+        mkdir ./Nitrox.BuildTool/bin/
+        cd ./Nitrox.BuildTool/bin/
+
+        touch subnauticaPath.txt
+        echo ~/Subnautica/ >> subnauticaPath.txt
+        echo "cat subnauticaPath.txt"
+        cat subnauticaPath.txt
+
+        cd ../../
+        mkdir ./Nitrox.Test/bin/
+        mkdir ./Nitrox.Test/bin/Debug/
+        cp ./Nitrox.BuildTool/bin/subnauticaPath.txt ./Nitrox.Test/bin/Debug/subnauticaPath.txt
+
+    - name: Run Nitrox.BuildTool
+      run: dotnet run --project ./Nitrox.BuildTool/Nitrox.BuildTool.csproj
+
+    - name: Install dependencies for Nitrox
+      run: dotnet restore
+
+  build:
+    needs: setup
+    runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+    steps:
+    - name: Build
+      run: dotnet build Nitrox.sln -c ${{ matrix.configuration }} --no-restore
+
+  test:
+    needs: build
+    runs-on: [self-hosted, linux]
+    steps:
+    - name: Run Tests
+      run: dotnet test Nitrox.Test/bin/Debug/Nitrox.Test.dll --logger trx --no-build --results-directory "TestResults" --verbosity quiet
+    - name: Upload Test Results
+      uses: actions/upload-artifact@v2
+      if: success() || failure()
+      with:
+        name: test-results
+        path: 'TestResults/*.trx'
