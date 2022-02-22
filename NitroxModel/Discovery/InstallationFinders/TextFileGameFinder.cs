@@ -11,25 +11,25 @@ public class TextFileGameFinder : IFindGameInstallation
 {
     public string FindGame(IList<string> errors = null)
     {
-        string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "subnauticaPath.txt");
+        string filePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty, "subnauticaPath.txt");
         if (!File.Exists(filePath))
         {
             return null;
         }
 
-        string path = File.ReadAllText(filePath);
-        if (string.IsNullOrEmpty(path))
+        string subnauticaPath = File.ReadAllText(filePath).Trim();
+        if (string.IsNullOrEmpty(subnauticaPath))
         {
             errors?.Add($@"Configured game path was found empty in file: {filePath}. Please enter the path to the Subnautica installation.");
             return null;
         }
 
-        if (!Directory.Exists(Path.Combine(path, "Subnautica_Data", "Managed")))
+        if (!Directory.Exists(Path.Combine(subnauticaPath, "Subnautica_Data", "Managed")))
         {
-            errors?.Add($@"Game installation directory config '{path}' is invalid. Please enter the path to the Subnautica installation.");
+            errors?.Add($@"Game installation directory config '{subnauticaPath}' is invalid. Please enter the path to the Subnautica installation.");
             return null;
         }
 
-        return path;
+        return subnauticaPath;
     }
 }
