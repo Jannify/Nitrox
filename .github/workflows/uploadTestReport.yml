@@ -2,8 +2,7 @@ name: Upload Test Report
 on:
   workflow_run:
     workflows: [Building Pull Request]
-    types:
-      - completed
+    types: [completed]
 
 jobs:
   report:
