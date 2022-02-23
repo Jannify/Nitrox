@@ -63,10 +63,10 @@ jobs:
     - name: Run Tests
       run: dotnet test Nitrox.Test/bin/Debug/Nitrox.Test.dll --logger trx --no-build --results-directory "TestResults"
     - uses: actions/upload-artifact@v2
-        if: success() || failure()
-        with:
-          name: test-results
-          path: 'TestResults/*.trx'
+      if: success() || failure()
+      with:
+        name: test-results
+        path: 'TestResults/*.trx'
     - name: Upload Test Results Maybe
       uses: dorny/test-reporter@v1
       with:
