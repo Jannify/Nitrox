@@ -1,7 +1,7 @@
-name: 'Upload Test Report'
+name: Upload Test Report
 on:
   workflow_run:
-    workflows: ['Building Pull Request']
+    workflows: [Building Pull Request]
     types:
       - completed
 
