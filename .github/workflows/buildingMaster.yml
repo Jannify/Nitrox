@@ -32,16 +32,12 @@ jobs:
     - name: Install dependencies for Nitrox
       run: dotnet restore
 
-  build_debug:
+  build:
     needs: setup
     runs-on: [self-hosted, linux]
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
     steps:
-    - name: Build Debug
-      run: dotnet build Nitrox.sln -c Debug --no-restore
-
-  build_release:
-    needs: setup
-    runs-on: [self-hosted, linux]
-    steps:
-    - name: Build Release
-      run: dotnet build Nitrox.sln -c Release --no-restore
+    - name: Build
+      run: dotnet build Nitrox.sln -c ${{ matrix.configuration }} --no-restore

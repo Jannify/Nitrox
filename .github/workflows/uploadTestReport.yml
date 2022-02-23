@@ -8,7 +8,7 @@ jobs:
   report:
     runs-on: [self-hosted, linux]
     steps:
-    - name: Upload Test Results
+    - name: Upload Test Report
       uses: dorny/test-reporter@v1
       with:
         artifact: test-results  
