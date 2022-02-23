@@ -70,7 +70,7 @@ jobs:
         path: 'TestResults/*.trx'
         reporter: dotnet-trx
         fail-on-error: false
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
     - uses: actions/upload-artifact@v2
       if: success() || failure()
       with:
