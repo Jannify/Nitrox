@@ -1,0 +1,16 @@
+{
+    "SideBar_Play": "Play",
+    "SideBar_Play_PlayGame": "Play game",
+    "SideBar_Play_PlayGame_ToolTip": "Play the game",
+    "SideBar_Play_Server": "Server",
+    "SideBar_Play_Server_ToolTip": "Configure and start the server",
+    "SideBar_Explore": "Explore",
+    "SideBar_Explore_Community": "Community",
+    "SideBar_Explore_Community_ToolTip": "Join the Nitrox community",
+    "SideBar_Explore_Blog": "Blog",
+    "SideBar_Explore_Blog_ToolTip": "Read the latest from the Dev Blog",
+    "SideBar_Updates": "Updates",
+    "SideBar_Updates_ToolTip": "Check for Updates",
+    "SideBar_Options": "Options",
+    "SideBar_Options_ToolTip": "Launcher options"
+}

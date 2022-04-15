@@ -1,8 +1,10 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using Microsoft.WindowsAPICodePack.Dialogs;
+using NitroxLauncher.LanguageLogic;
 using NitroxLauncher.Models;
 using NitroxModel.Discovery;
 using NitroxServer.Serialization.World;
@@ -14,6 +16,8 @@ namespace NitroxLauncher.Pages
         public Platform GamePlatform => LauncherLogic.Config.SubnauticaPlatform;
         public string PathToSubnautica => LauncherLogic.Config.SubnauticaPath;
         public string SubnauticaLaunchArguments => LauncherLogic.Config.SubnauticaLaunchArguments;
+
+        public IEnumerable<string> SupportedLanguages => Translator.GetSupportedLanguages();
 
         public OptionPage()
         {
@@ -36,6 +40,16 @@ namespace NitroxLauncher.Pages
             {
                 LauncherLogic.Config.PropertyChanged -= OnLogicPropertyChanged;
             };
+        }
+
+        public string SelectedLanguage
+        {
+            get => Translator.CurrentLanguage.EnglishDisplayName;
+            set
+            {
+                Translator.SetLanguage(value);
+                LauncherLogic.Config.Language = value;
+            }
         }
 
         private async void OnChangePath_Click(object sender, RoutedEventArgs e)
@@ -104,6 +118,12 @@ namespace NitroxLauncher.Pages
         private void OnViewFolder_Click(object sender, RoutedEventArgs e)
         {
             Process.Start(WorldManager.SavesFolderDir)?.Dispose();
+        }
+
+        private void OnRestart_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start(Process.GetCurrentProcess().MainModule!.FileName);
+            Application.Current.Shutdown();
         }
     }
 }
