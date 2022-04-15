@@ -94,6 +94,23 @@ namespace NitroxLauncher
             }
         }
 
+        // Launcher language
+        private string language = Settings.Default.Language;
+        public string Language
+        {
+            get => language;
+            set
+            {
+                if (value != language)
+                {
+                    language = value;
+                    Settings.Default.Language = value;
+                    Settings.Default.Save();
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
