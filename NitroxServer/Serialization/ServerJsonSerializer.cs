@@ -8,33 +8,33 @@ namespace NitroxServer.Serialization;
 
 public class ServerJsonSerializer : IServerSerializer
 {
-    private readonly JsonSerializer serializer;
+    protected JsonSerializer Serializer;
 
     public ServerJsonSerializer()
     {
-        serializer = new JsonSerializer();
+        Serializer = new JsonSerializer();
 
-        serializer.Error += delegate (object _, Newtonsoft.Json.Serialization.ErrorEventArgs e)
+        Serializer.Error += delegate (object _, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
             Log.Error(e.ErrorContext.Error, "Json serialization error: ");
         };
 
-        serializer.TypeNameHandling = TypeNameHandling.Auto;
-        serializer.ContractResolver = new AttributeContractResolver();
-        serializer.Converters.Add(new NitroxIdConverter());
-        serializer.Converters.Add(new TechTypeConverter());
-        serializer.Converters.Add(new VersionConverter());
-        serializer.Converters.Add(new KeyValuePairConverter());
-        serializer.Converters.Add(new StringEnumConverter());
+        Serializer.TypeNameHandling = TypeNameHandling.Auto;
+        Serializer.ContractResolver = new AttributeContractResolver();
+        Serializer.Converters.Add(new VersionConverter());
+        Serializer.Converters.Add(new KeyValuePairConverter());
+        Serializer.Converters.Add(new StringEnumConverter());
+        Serializer.Converters.Add(new NitroxIdConverter());
+        Serializer.Converters.Add(new ShortOptionalConverter());
     }
 
-    public string FileEnding => ".json";
+    public virtual string FileEnding => ".json";
 
     public void Serialize(Stream stream, object o)
     {
         stream.Position = 0;
         using JsonTextWriter writer = new(new StreamWriter(stream));
-        serializer.Serialize(writer, o);
+        Serializer.Serialize(writer, o);
     }
 
     public void Serialize(string filePath, object o)
@@ -42,7 +42,7 @@ public class ServerJsonSerializer : IServerSerializer
         string tmpPath = Path.ChangeExtension(filePath, ".tmp");
         using (StreamWriter stream = File.CreateText(tmpPath))
         {
-            serializer.Serialize(stream, o);
+            Serializer.Serialize(stream, o);
         }
         FileSystem.Instance.ReplaceFile(tmpPath, filePath);
     }
@@ -51,12 +51,12 @@ public class ServerJsonSerializer : IServerSerializer
     {
         stream.Position = 0;
         using JsonTextReader reader = new(new StreamReader(stream));
-        return (T)serializer.Deserialize(reader, typeof(T));
+        return (T)Serializer.Deserialize(reader, typeof(T));
     }
 
     public T Deserialize<T>(string filePath)
     {
         using StreamReader reader = File.OpenText(filePath);
-        return (T)serializer.Deserialize(reader, typeof(T));
+        return (T)Serializer.Deserialize(reader, typeof(T));
     }
 }

@@ -27,14 +27,16 @@ namespace NitroxServer.Serialization.World
 
         private readonly ServerProtoBufSerializer protoBufSerializer;
         private readonly ServerJsonSerializer jsonSerializer;
+        private readonly ServerDebugJsonSerializer debugJsonSerializer;
         private readonly ServerConfig config;
         private readonly RandomStartGenerator randomStart;
         private readonly SaveDataUpgrade[] upgrades;
 
-        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
+        public WorldPersistence(ServerProtoBufSerializer protoBufSerializer, ServerJsonSerializer jsonSerializer, ServerDebugJsonSerializer debugJsonSerializer, ServerConfig config, RandomStartGenerator randomStart, SaveDataUpgrade[] upgrades)
         {
             this.protoBufSerializer = protoBufSerializer;
             this.jsonSerializer = jsonSerializer;
+            this.debugJsonSerializer = debugJsonSerializer;
             this.config = config;
             this.randomStart = randomStart;
             this.upgrades = upgrades;
@@ -50,7 +52,15 @@ namespace NitroxServer.Serialization.World
 
         internal void UpdateSerializer(ServerSerializerMode mode)
         {
-            Serializer = (mode == ServerSerializerMode.PROTOBUF) ? protoBufSerializer : jsonSerializer;
+            Serializer = mode switch
+            {
+                ServerSerializerMode.PROTOBUF => protoBufSerializer,
+                ServerSerializerMode.JSON => jsonSerializer,
+#if DEBUG
+                ServerSerializerMode.JSON_DEBUG => debugJsonSerializer,
+#endif
+                _ => throw new ArgumentOutOfRangeException(nameof(mode))
+            };
         }
 
         public bool Save(World world, string saveDir) => Save(PersistedWorldData.From(world), saveDir);

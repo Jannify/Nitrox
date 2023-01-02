@@ -4,5 +4,8 @@
     {
         PROTOBUF,
         JSON
+#if DEBUG
+        ,JSON_DEBUG
+#endif
     }
 }

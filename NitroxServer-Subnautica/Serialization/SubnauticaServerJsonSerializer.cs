@@ -1,11 +1,13 @@
-﻿using NitroxServer.Serialization;
+﻿using NitroxServer_Subnautica.Serialization.Json;
+using NitroxServer.Serialization;
 
 namespace NitroxServer_Subnautica.Serialization
 {
-    class SubnauticaServerJsonSerializer : ServerJsonSerializer
+    public class SubnauticaServerJsonSerializer : ServerJsonSerializer
     {
         public SubnauticaServerJsonSerializer()
         {
+            Serializer.Converters.Add(new SubnauticaTechTypeConverter());
         }
     }
 }

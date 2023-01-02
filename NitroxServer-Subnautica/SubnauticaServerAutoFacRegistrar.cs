@@ -35,7 +35,11 @@ namespace NitroxServer_Subnautica
             containerBuilder.Register(c => new SubnauticaServerJsonSerializer())
                             .As<ServerJsonSerializer, IServerSerializer>()
                             .SingleInstance();
-
+#if DEBUG
+            containerBuilder.Register(c => new SubnauticaServerDebugJsonSerializer())
+                            .As<ServerDebugJsonSerializer, IServerSerializer>()
+                            .SingleInstance();
+#endif
             containerBuilder.RegisterType<SubnauticaEntitySpawnPointFactory>().As<EntitySpawnPointFactory>().SingleInstance();
 
             ResourceAssets resourceAssets = ResourceAssetsParser.Parse();
