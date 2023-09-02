@@ -6,6 +6,7 @@ using System.Linq;
 using NitroxClient.Communication.Abstract;
 using NitroxClient.GameLogic.PlayerLogic.PlayerModel.Abstract;
 using NitroxClient.GameLogic.Spawning;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Bases;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.Metadata.Extractor;
@@ -145,7 +146,7 @@ namespace NitroxClient.GameLogic
         public IEnumerator SpawnBatchAsync(List<Entity> batch, bool forceRespawn = false)
         {
             int timeSkips = 0;
-            
+
             float allottedTimePerFrame = 1f / Application.targetFrameRate;
             float timeLimit = Time.realtimeSinceStartup + allottedTimePerFrame;
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -155,7 +156,7 @@ namespace NitroxClient.GameLogic
                 TaskResult<Optional<GameObject>> entityResult = new();
                 TaskResult<Exception> exception = new();
 
-                if (!entitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null)
+                if (entitySpawner is not ISyncEntitySpawner syncEntitySpawner || (!syncEntitySpawner.SpawnSyncSafe(entity, entityResult, exception) && exception.Get() == null))
                 {
                     IEnumerator coroutine = entitySpawner.SpawnAsync(entity, entityResult);
                     if (coroutine != null)
@@ -196,7 +197,7 @@ namespace NitroxClient.GameLogic
                     exception.Set(null);
                     TaskResult<Optional<GameObject>> childResult = new();
                     IEntitySpawner childSpawner = entitySpawnersByType[childEntity.GetType()];
-                    if (!childSpawner.SpawnSyncSafe(childEntity, childResult, exception) && exception.Get() == null)
+                    if (childSpawner is not ISyncEntitySpawner syncChildSpawner || (!syncChildSpawner.SpawnSyncSafe(childEntity, childResult, exception) && exception.Get() == null))
                     {
                         IEnumerator coroutine = childSpawner.SpawnAsync(childEntity, childResult);
                         if (coroutine != null)
@@ -325,7 +326,7 @@ namespace NitroxClient.GameLogic
 
         // Entites can sometimes be spawned as one thing but need to be respawned later as another.  For example, a flare
         // spawned inside an Inventory as an InventoryItemEntity can later be dropped in the world as a WorldEntity. Another
-        // example would be a base ghost that needs to be respawned a completed piece. 
+        // example would be a base ghost that needs to be respawned a completed piece.
         public bool WasAlreadySpawned(Entity entity)
         {
             if (spawnedAsType.TryGetValue(entity.Id, out Type type))

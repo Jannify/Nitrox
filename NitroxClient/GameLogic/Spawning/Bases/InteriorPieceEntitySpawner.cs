@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -24,7 +25,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         this.entities = entities;
     }
 
-    public override IEnumerator SpawnAsync(InteriorPieceEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(InteriorPieceEntity entity, TaskResult<Optional<GameObject>> result)
     {
         if (entity.ParentId == null || !NitroxEntity.TryGetComponentFrom(entity.ParentId, out Base @base))
         {
@@ -85,7 +86,7 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         }
     }
 
-    public override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;
+    protected override bool SpawnsOwnChildren(InteriorPieceEntity entity) => true;
 
     public static IEnumerator RestoreInteriorPiece(InteriorPieceEntity interiorPiece, Base @base, TaskResult<Optional<GameObject>> result = null)
     {
@@ -181,5 +182,5 @@ public class InteriorPieceEntitySpawner : EntitySpawner<InteriorPieceEntity>
         NitroxEntity.SetNewId(mapRoomFunctionality.gameObject, mapRoomEntity.Id);
     }
 
-    
+
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.GameLogic.Spawning.Metadata;
 using NitroxClient.GameLogic.Spawning.WorldEntities;
 using NitroxClient.MonoBehaviours;
@@ -27,7 +28,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         this.entities = entities;
     }
 
-    public override IEnumerator SpawnAsync(ModuleEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(ModuleEntity entity, TaskResult<Optional<GameObject>> result)
     {
         Log.Debug($"Spawning a ModuleEntity: {entity.Id}");
 
@@ -67,7 +68,7 @@ public class ModuleEntitySpawner : EntitySpawner<ModuleEntity>
         }
     }
 
-    public override bool SpawnsOwnChildren(ModuleEntity entity) => true;
+    protected override bool SpawnsOwnChildren(ModuleEntity entity) => true;
 
     public static IEnumerator RestoreModule(Transform parent, ModuleEntity moduleEntity, TaskResult<Optional<GameObject>> result = null)
     {

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using NitroxClient.GameLogic.Bases;
 using NitroxClient.GameLogic.Helper;
+using NitroxClient.GameLogic.Spawning.Abstract;
 using NitroxClient.MonoBehaviours;
 using NitroxModel.DataStructures;
 using NitroxModel.DataStructures.GameLogic;
@@ -25,7 +26,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         this.entities = entities;
     }
 
-    public override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
+    protected override IEnumerator SpawnAsync(BuildEntity entity, TaskResult<Optional<GameObject>> result)
     {
         Log.Debug($"Spawning a BuildEntity: {entity.Id}");
         if (NitroxEntity.TryGetObjectFrom(entity.Id, out GameObject gameObject) && gameObject)
@@ -58,7 +59,7 @@ public class BuildEntitySpawner : EntitySpawner<BuildEntity>
         result.Set(@base.gameObject);
     }
 
-    public override bool SpawnsOwnChildren(BuildEntity entity) => true;
+    protected override bool SpawnsOwnChildren(BuildEntity entity) => true;
 
     public static BuildEntity From(Base targetBase)
     {
