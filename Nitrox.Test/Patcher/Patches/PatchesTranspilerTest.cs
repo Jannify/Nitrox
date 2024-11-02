@@ -42,6 +42,7 @@ public class PatchesTranspilerTest
         [typeof(IngameMenu_OnSelect_Patch), -2],
         [typeof(IngameMenu_QuitGameAsync_Patch), 2],
         [typeof(IngameMenu_QuitSubscreen_Patch), -24],
+        [typeof(IngameMenu_SaveGameAsync_Patch), 0],
         [typeof(Inventory_LoseItems_Patch), -2],
         [typeof(ItemsContainer_DestroyItem_Patch), 2],
         [typeof(LaunchRocket_OnHandClick_Patch), -9],
