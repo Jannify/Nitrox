@@ -1,6 +1,6 @@
 <p align="center">
     <img src="https://i.imgur.com/ofnNX5z.gif" alt="Nitrox Subnautica Multiplayer Mod" />
-</p>
+</p>pü+kjn
 
 # Subnautica Nitrox
 An open-source, multiplayer modification for the game <a href="https://unknownworlds.com/subnautica/">Subnautica</a>.
@@ -14,12 +14,12 @@ An open-source, multiplayer modification for the game <a href="https://unknownwo
 
 ### What is the current status?
 The mod is in the very early stages of development; however, a solid foundation has been laid for the community to iterate on.
-The following milestones have been completed:
+The following milestones have been completed:rt
 
 * Client / Server Communication
 * Player movement
 * Picking up / Dropping item syncing
-* Long-range world syncing
+* Long-range world syncingssdad
 * Base building
 * Furniture building
 * Most furniture interactions (containers / medkit fabricators / chargers / etc)
