@@ -19,7 +19,7 @@ The following milestones have been completed:
 * Client / Server Communication
 * Player movement
 * Picking up / Dropping item syncing
-* Long-range world syncing
+* Long-range world syncingssdad
 * Base building
 * Furniture building
 * Most furniture interactions (containers / medkit fabricators / chargers / etc)
