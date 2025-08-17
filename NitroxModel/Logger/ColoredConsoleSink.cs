@@ -46,7 +46,7 @@ namespace NitroxModel.Logger
         public static LoggerConfiguration ColoredConsole(
             this LoggerSinkConfiguration loggerConfiguration,
             LogEventLevel minimumLevel = LogEventLevel.Verbose,
-            string outputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj}{NewLine}{Exception}",
+            string outputTemplate = "[{Timestamp:HH:mm:ss} {Level:u3}] AA {Message:lj}{NewLine}{Exception}",
             IFormatProvider formatProvider = null)
         {
             return loggerConfiguration.Sink(new ColoredConsoleSink(new MessageTemplateTextFormatter(outputTemplate, formatProvider)), minimumLevel);
