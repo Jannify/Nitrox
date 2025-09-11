@@ -14,7 +14,7 @@ An open-source, multiplayer modification for the game <a href="https://unknownwo
 
 ### What is the current status?
 The mod is in the very early stages of development; however, a solid foundation has been laid for the community to iterate on.
-The following milestones have been completed:rt
+The following milestones have been completed:rt23
 
 * Client / Server Communication
 * Player movement
